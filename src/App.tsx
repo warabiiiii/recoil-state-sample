@@ -1,23 +1,20 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { useRefreshAccount } from "./modules/account/operations";
+import { accountUiState } from "./modules/account/selectors";
 
-function App() {
-  const [count, setCount] = useState(0);
+export const App = () => {
+  const refreshAccount = useRefreshAccount();
+
+  useEffect(() => {
+    refreshAccount();
+  }, [refreshAccount]);
+
+  const value = useRecoilValue(accountUiState);
 
   return (
     <div>
-      <header>
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-      </header>
+      <header>{JSON.stringify(value)}</header>
     </div>
   );
-}
-
-export default App;
+};
