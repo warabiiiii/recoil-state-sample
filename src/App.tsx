@@ -1,23 +1,36 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { useRefreshAccount } from "./modules/account/operations";
+import { accountUiState } from "./modules/account/selectors";
 
-function App() {
-  const [count, setCount] = useState(0);
+export const App = () => {
+  const refreshAccount = useRefreshAccount();
 
-  return (
-    <div>
-      <header>
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-      </header>
-    </div>
-  );
-}
+  useEffect(() => {
+    refreshAccount();
+  }, [refreshAccount]);
 
-export default App;
+  const account = useRecoilValue(accountUiState);
+  switch (account.status) {
+    case "Loading": {
+      return <div>Loading...</div>;
+    }
+    case "ShowError": {
+      return <div>Error: {account.error.message}</div>;
+    }
+    case "NotLoggedIn": {
+      return (
+        <button
+          onClick={() => {
+            // SignIn
+          }}
+        >
+          SignIn
+        </button>
+      );
+    }
+    case "LoggedIn": {
+      return <div>name: {account.account.name}</div>;
+    }
+  }
+};
