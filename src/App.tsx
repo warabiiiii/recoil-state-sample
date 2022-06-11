@@ -10,11 +10,27 @@ export const App = () => {
     refreshAccount();
   }, [refreshAccount]);
 
-  const value = useRecoilValue(accountUiState);
-
-  return (
-    <div>
-      <header>{JSON.stringify(value)}</header>
-    </div>
-  );
+  const account = useRecoilValue(accountUiState);
+  switch (account.status) {
+    case "Loading": {
+      return <div>Loading...</div>;
+    }
+    case "ShowError": {
+      return <div>Error: {account.error.message}</div>;
+    }
+    case "NotLoggedIn": {
+      return (
+        <button
+          onClick={() => {
+            // SignIn
+          }}
+        >
+          SignIn
+        </button>
+      );
+    }
+    case "LoggedIn": {
+      return <div>name: {account.account.name}</div>;
+    }
+  }
 };

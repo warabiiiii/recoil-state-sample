@@ -6,19 +6,19 @@ export const useRefreshAccount = () =>
   useRecoilCallback(
     ({ set }) =>
       async () => {
-        set(accountAtom, (v) => ({ ...v, isLoading: true }));
+        set(accountAtom, (prev) => ({ ...prev, isLoading: true }));
 
         const accountResult = await accountApi.get();
 
         if (accountResult.isSuccess) {
-          set(accountAtom, (v) => ({
-            ...v,
+          set(accountAtom, (prev) => ({
+            ...prev,
             isLoading: false,
             account: accountResult.value,
           }));
         } else {
-          set(accountAtom, (v) => ({
-            ...v,
+          set(accountAtom, (prev) => ({
+            ...prev,
             isLoading: false,
             account: null,
           }));
